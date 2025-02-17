@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "./main";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { setIsAuthenticated } = useContext(Context);
+  const { setIsAuthenticated, isAuthenticated } = useContext(Context);
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -20,23 +21,26 @@ const Navbar = () => {
                   Products
                 </Link>
               </li>
-
-              <li className="nav-item">
-                <Link className="nav-link " to={"/login"}>
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button
-                  className="nav-link"
-                  onClick={() => {
-                    setIsAuthenticated(false);
-                    alert("your are logged out!");
-                  }}
-                >
-                  Logout
-                </button>
-              </li>
+              {!isAuthenticated ? (
+                <li className="nav-item">
+                  <Link className="nav-link " to={"/login"}>
+                    Login
+                  </Link>
+                </li>
+              ) : (
+                <li className="nav-item">
+                  <button
+                    className="nav-link"
+                    onClick={() => {
+                      setIsAuthenticated(false);
+                      //   alert("your are logged out!");
+                      toast.success("You are Successfully Logged Out!");
+                    }}
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         </div>

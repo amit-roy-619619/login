@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Context } from "./main";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Login = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
   const [email, setEmail] = useState("");
@@ -49,13 +50,15 @@ const Login = () => {
       .then((result) => {
         //console.log(result);
         if (result.access_token) {
-          alert("You are logged in.");
+          // alert("You are logged in.");
+          toast.success("You Are Successfully Logged In");
           setIsAuthenticated(true);
           navigateTo("/products");
         } else {
           //   console.log(email);
           //   console.log(password);
-          alert("Please check your login information.");
+          // alert("Please check your login information.");
+          toast.error("Please Check Your Login Information!");
         }
       });
   };
