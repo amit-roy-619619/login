@@ -31,6 +31,7 @@ const Navbar = () => {
                   className="nav-link"
                   onClick={() => {
                     setIsAuthenticated(false);
+                    alert("your are logged out!");
                   }}
                 >
                   Logout

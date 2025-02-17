@@ -5,9 +5,9 @@ import { Navigate } from "react-router-dom";
 const Products = () => {
   const { isAuthenticated } = useContext(Context);
 
-  if (!isAuthenticated) {
-    return <Navigate to={"/login"} />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to={"/login"} />;
+  // }
 
   return (
     <div>
