@@ -49,14 +49,20 @@ const Navbar = () => {
                   </button>
                 </li>
               )}
-              <li className="nav-item">
-                <div className="nav-link">
-                  <span>{productCount}</span>{" "}
-                  <FaCartArrowDown
-                    style={{ height: "35px", width: "35px", cursor: "pointer" }}
-                  />
-                </div>
-              </li>
+              {isAuthenticated ? (
+                <li className="nav-item">
+                  <div className="nav-link">
+                    <span>{productCount}</span>{" "}
+                    <FaCartArrowDown
+                      style={{
+                        height: "35px",
+                        width: "35px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </div>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>
