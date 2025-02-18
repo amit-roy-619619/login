@@ -47,7 +47,7 @@ const Products = () => {
   if (isLoading) {
     return (
       <div
-        className="spinner-border text-primary container d-flex justify-content-center mt-20"
+        className="spinner-border text-primary container d-flex justify-content-center pt-20"
         role="status"
       >
         <span className="sr-only">Loading...</span>
@@ -65,6 +65,7 @@ const Products = () => {
                 category={product.category}
                 description={product.description}
                 price={product.price}
+                id={product.id}
               />
             </div>
           );

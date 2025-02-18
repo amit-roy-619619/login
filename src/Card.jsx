@@ -4,8 +4,9 @@ import { GrAdd } from "react-icons/gr";
 import { GrFormSubtract } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import { decrement, increment } from "./redux/productCounterSlice";
+import { Link } from "react-router-dom";
 
-const Card = ({ image, category, description, price, index }) => {
+const Card = ({ image, category, description, price, id }) => {
   //   const {
   //     productQuantity,
   //     setProductQuantity,
@@ -19,30 +20,32 @@ const Card = ({ image, category, description, price, index }) => {
     (state) => state.productCounter.totalProducts
   );
   const [individualProductQuantity, setIndividualProductQuantity] = useState(0);
-  function capitalizeWords(sentence) {
+  const capitalizeWords = (sentence) => {
     const words = sentence.split(" ");
     const capitalizedWords = words.map((word) => {
       return word.charAt(0).toUpperCase() + word.slice(1);
     });
     return capitalizedWords.join(" ");
-  }
+  };
 
   return (
     <div className="cart-item">
-      <div style={{ textAlign: "center" }}>
-        <img src={image} alt="Product" />
-      </div>
-      <div className="item-details">
-        <p>{capitalizeWords(category)}</p>
-        <p>
-          <span>Description : </span>
-          {description.substring(0, 100)}
-        </p>
-        <p>
-          <span>Price :</span>
-          <strong>{price}</strong>
-        </p>
-      </div>
+      <Link className="text-decoration-none text-dark" to={`/product/${id}`}>
+        <div style={{ textAlign: "center" }}>
+          <img src={image} alt="Product" />
+        </div>
+        <div className="item-details">
+          <p>{capitalizeWords(category)}</p>
+          <p>
+            <span>Description : </span>
+            {description.substring(0, 100)}
+          </p>
+          <p>
+            <span>Price :</span>
+            <strong>{price}</strong>
+          </p>
+        </div>
+      </Link>
       <div style={{ textAlign: "center" }}>
         <span>
           <button

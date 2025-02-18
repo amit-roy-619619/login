@@ -8,6 +8,7 @@ import { Context } from "./main";
 import PrivateRoute from "./PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
+import ProductDetails from "./ProductDetails";
 
 const App = () => {
   const { isAuthenticated } = useContext(Context);
@@ -19,6 +20,7 @@ const App = () => {
         <Routes>
           <Route element={<PrivateRoute />}>
             <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
           </Route>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
