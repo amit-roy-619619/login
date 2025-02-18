@@ -7,6 +7,7 @@ import Products from "./Products";
 import { Context } from "./main";
 import PrivateRoute from "./PrivateRoute";
 import { ToastContainer } from "react-toastify";
+import "./App.css";
 
 const App = () => {
   const { isAuthenticated } = useContext(Context);
