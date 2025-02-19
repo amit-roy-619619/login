@@ -28,6 +28,11 @@ const Navbar = () => {
                   Products
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/todo"}>
+                  ToDo List
+                </Link>
+              </li>
               {!isAuthenticated ? (
                 <li className="nav-item">
                   <Link className="nav-link " to={"/login"}>

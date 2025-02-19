@@ -9,6 +9,7 @@ import PrivateRoute from "./PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import ProductDetails from "./ProductDetails";
+import TodoList from "./TodoList";
 
 const App = () => {
   const { isAuthenticated } = useContext(Context);
@@ -24,6 +25,7 @@ const App = () => {
           </Route>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/todo" element={<TodoList />} />
         </Routes>
         <ToastContainer position="top-right" />
       </Router>

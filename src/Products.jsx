@@ -3,9 +3,12 @@ import React, { useContext, useEffect, useState } from "react";
 import Card from "./Card";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchData } from "./redux/apiDataSlice";
+import Pagination from "./Pagination";
 
 const Products = () => {
   //const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage, setPostPerPage] = useState(8);
   const { data, isLoading, error } = useSelector((state) => state.apiData);
   const dispatch = useDispatch();
 
@@ -43,7 +46,9 @@ const Products = () => {
   //     })}
   //   </div>
   // );
-
+  const lastPostIndex = currentPage * postPerPage;
+  const firstPostIndex = lastPostIndex - postPerPage;
+  const currentPosts = data.slice(firstPostIndex, lastPostIndex);
   if (isLoading) {
     return (
       <div
@@ -56,7 +61,7 @@ const Products = () => {
   } else {
     return (
       <div className="cart-container">
-        {data.map((product, index) => {
+        {currentPosts.map((product, index) => {
           return (
             <div key={index}>
               <Card
@@ -70,6 +75,12 @@ const Products = () => {
             </div>
           );
         })}
+        <Pagination
+          totalPosts={data.length}
+          postsPerPage={postPerPage}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
       </div>
     );
   }
