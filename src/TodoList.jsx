@@ -59,7 +59,12 @@ function TodoList() {
   };
 
   return (
-    <div style={{ fontFamily: "sans-serif", margin: "20px" }}>
+    <div
+      style={{
+        fontFamily: "sans-serif",
+        margin: "20px",
+      }}
+    >
       <div className="text-center">
         <h1>Todo List</h1>
         <div style={{ marginBottom: "10px" }}>
