@@ -1,198 +1,131 @@
 import React, { useState, useEffect } from "react";
-import { BsTypeH5 } from "react-icons/bs";
 
-function TodoList1() {
-  const [todos, setTodos] = useState(
-    JSON.parse(localStorage.getItem("todos")) || []
-  );
-  const [newTodo, setNewTodo] = useState({
-    title: "",
-    description: "",
-    completed: false,
-  });
-  const [additionalInputs, setAdditionalInputs] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
+const TodoList = () => {
+  const [todos, setTodos] = useState([]);
+  const [inputs, setInputs] = useState([
+    { title: "", description: "", completed: false },
+  ]);
+  const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    setTodos(savedTodos);
+  }, []);
 
   const handleInputChange = (index, field, value) => {
-    if (index === null) {
-      setNewTodo({ ...newTodo, [field]: value });
-    } else {
-      const updatedInputs = [...additionalInputs];
-      updatedInputs[index] = { ...updatedInputs[index], [field]: value };
-      setAdditionalInputs(updatedInputs);
-    }
+    const newInputs = [...inputs];
+    newInputs[index][field] = value;
+    setInputs(newInputs);
   };
 
-  const handleAddMore = () => {
-    setAdditionalInputs([...additionalInputs, { title: "", description: "" }]);
+  const addMore = () => {
+    setInputs([...inputs, { title: "", description: "", completed: false }]);
   };
 
-  const handleSave = () => {
-    const allTodos = [...todos];
-
-    if (newTodo.title || newTodo.description) {
-      allTodos.push(newTodo);
-    }
-
-    additionalInputs.forEach((input) => {
-      if (input.title || input.description) {
-        allTodos.push(input);
-      }
-    });
-
-    setTodos(allTodos);
-    setNewTodo({ title: "", description: "", completed: false });
-    setAdditionalInputs([]);
+  const saveTodos = () => {
+    const newTodos = [...todos, ...inputs];
+    setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+    setInputs([{ title: "", description: "", completed: false }]);
   };
 
-  const handleEdit = (index) => {
-    setEditingIndex(index);
-  };
-
-  const handleUpdate = (index) => {
-    const updatedTodos = [...todos];
-    if (index < additionalInputs.length) {
-      updatedTodos[index] = additionalInputs[index];
-    } else {
-      updatedTodos[index] = newTodo;
-    }
-    setTodos(updatedTodos);
-    setEditingIndex(null);
-    setNewTodo({ title: "", description: "", completed: false });
-    setAdditionalInputs([]);
-  };
-
-  const handleDelete = (index) => {
+  const deleteTodo = (index) => {
     const updatedTodos = todos.filter((_, i) => i !== index);
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
-  const handleComplete = (index) => {
+  const editTodo = (index) => {
+    setEditIndex(index);
+    setInputs([{ ...todos[index] }]);
+  };
+
+  const saveNow = () => {
+    const updatedTodos = [...todos];
+    updatedTodos[editIndex] = inputs[0];
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    setEditIndex(null);
+    setInputs([{ title: "", description: "", completed: false }]);
+  };
+
+  const toggleCompletion = (index) => {
     const updatedTodos = [...todos];
     updatedTodos[index].completed = !updatedTodos[index].completed;
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   return (
-    <div className="container text-center ">
-      <h2
-        style={{ marginBottom: "40px", color: "#91f086", fontWeight: "bolder" }}
-      >
-        Todo List
-      </h2>
-
-      <div>
-        <label style={{ marginRight: "10px" }}>Title :</label>
-        <span>
+    <div className="container mt-5">
+      <h1 className="mb-4">Todo List</h1>
+      {inputs.map((input, index) => (
+        <div key={index} className="mb-3 d-flex gap-2">
           <input
             type="text"
-            style={{ marginRight: "10px" }}
-            value={newTodo.title}
-            onChange={(e) => handleInputChange(null, "title", e.target.value)}
+            placeholder="Title"
+            value={input.title}
+            onChange={(e) => handleInputChange(index, "title", e.target.value)}
+            className="form-control"
           />
-        </span>
-        <label style={{ marginRight: "10px" }}>Description :</label>
-        <span>
           <input
             type="text"
-            value={newTodo.description}
+            placeholder="Description"
+            value={input.description}
             onChange={(e) =>
-              handleInputChange(null, "description", e.target.value)
+              handleInputChange(index, "description", e.target.value)
             }
+            className="form-control"
           />
-        </span>
-      </div>
-
-      {additionalInputs.map((input, index) => (
-        <div key={index}>
-          <label style={{ marginRight: "10px" }}>Title :</label>
-          <span>
-            <input
-              type="text"
-              style={{ marginRight: "10px" }}
-              value={input.title}
-              onChange={(e) =>
-                handleInputChange(index, "title", e.target.value)
-              }
-            />
-          </span>
-          <label style={{ marginRight: "10px" }}>Description :</label>
-          <span>
-            <input
-              type="text"
-              value={input.description}
-              onChange={(e) =>
-                handleInputChange(index, "description", e.target.value)
-              }
-            />
-          </span>
         </div>
       ))}
-
-      <button
-        style={{ marginTop: "20px", marginBottom: "20px" }}
-        onClick={handleAddMore}
-      >
+      <button onClick={addMore} className="btn btn-outline-dark me-2">
         Add More
       </button>
-      <button
-        style={{ marginTop: "20px", marginBottom: "20px" }}
-        onClick={handleSave}
-      >
-        Save
-      </button>
-
-      <ul style={{ listStyle: "none" }}>
-        {todos.length > 0 ? (
-          <h5 style={{ color: "purple", fontWeight: "bold" }}>Your TODOs :</h5>
-        ) : null}
-        {todos.map((todo, index) => (
-          <li
-            key={index}
-            style={{
-              textDecoration: todo.completed ? "line-through" : "none",
-              marginBottom: "10px",
-            }}
+      {editIndex === null ? (
+        <button onClick={saveTodos} className="btn btn-outline-dark">
+          Save
+        </button>
+      ) : (
+        <button onClick={saveNow} className="btn btn-outline-dark">
+          Save Now
+        </button>
+      )}
+      <h2 className="mt-5">Saved Todos</h2>
+      {todos.map((todo, index) => (
+        <div
+          key={index}
+          className="border p-2 my-2 d-flex justify-content-between align-items-center"
+        >
+          <div
+            style={{ textDecoration: todo.completed ? "line-through" : "none" }}
           >
             <strong>{todo.title}</strong>: {todo.description}
+          </div>
+          <div>
             <button
-              style={{ marginLeft: "20px" }}
-              onClick={() => handleComplete(index)}
+              onClick={() => toggleCompletion(index)}
+              className="btn btn-outline-dark me-2"
             >
-              {todo.completed ? "Mark Incomplete" : "Mark Complete"}
+              {todo.completed ? "Mark as Pending" : "Mark as Completed"}
             </button>
-            {editingIndex === index ? (
-              <div>
-                <input
-                  type="text"
-                  value={todo.title}
-                  onChange={(e) =>
-                    handleInputChange(index, "title", e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Description"
-                  value={todo.description}
-                  onChange={(e) =>
-                    handleInputChange(index, "description", e.target.value)
-                  }
-                />
-                <button onClick={() => handleUpdate(index)}>Update</button>
-              </div>
-            ) : (
-              <button onClick={() => handleEdit(index)}>Edit</button>
-            )}
-            <button onClick={() => handleDelete(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+            <button
+              onClick={() => editTodo(index)}
+              className="btn btn-outline-dark me-2"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => deleteTodo(index)}
+              className="btn btn-outline-dark"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
-}
+};
 
-export default TodoList1;
+export default TodoList;

@@ -29,8 +29,13 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={"/todo"}>
-                  ToDo List
+                <Link className="nav-link" to={"/simpletodolist"}>
+                  Simple ToDo List
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/complecatedtodolist"}>
+                  Complecated ToDo List
                 </Link>
               </li>
               {!isAuthenticated ? (

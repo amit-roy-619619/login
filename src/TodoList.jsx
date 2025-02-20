@@ -5,7 +5,7 @@ function TodoList() {
     const storedTasks = localStorage.getItem("tasks");
     return storedTasks ? JSON.parse(storedTasks) : [];
   });
-  console.log(tasks);
+
   const [newTask, setNewTask] = useState("");
   const [editingTask, setEditingTask] = useState(null);
   const [editedTaskText, setEditedTaskText] = useState("");
