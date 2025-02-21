@@ -65,7 +65,9 @@ const TodoList = () => {
             type="text"
             placeholder="Title"
             value={input.title}
-            onChange={(e) => handleInputChange(index, "title", e.target.value)}
+            onChange={(e) => {
+              handleInputChange(index, "title", e.target.value);
+            }}
             className="form-control"
           />
           <input
