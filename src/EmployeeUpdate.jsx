@@ -220,6 +220,7 @@ const EmployeeUpdate = () => {
           <div className="mb-3">
             <label className="form-label">Employee Name</label>
             <input
+              name="empName"
               type="text"
               className="form-control"
               value={editedFormData.empName}
@@ -229,6 +230,7 @@ const EmployeeUpdate = () => {
           <div className="mb-3">
             <label className="form-label">Date Of Bith</label>
             <input
+              name="dob"
               type="date"
               className="form-control"
               value={editedFormData.dob}
@@ -247,6 +249,7 @@ const EmployeeUpdate = () => {
           <div className="mb-3">
             <label className="form-label">Department</label>
             <select
+              name="department"
               className="form-control"
               value={editedFormData.department}
               onChange={handleChange}
@@ -265,6 +268,7 @@ const EmployeeUpdate = () => {
             <div>
               <input
                 type="radio"
+                name="gender"
                 value="Male"
                 checked={editedFormData.gender === "Male"}
                 onChange={handleChange}
