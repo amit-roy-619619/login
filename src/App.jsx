@@ -11,10 +11,9 @@ import "./App.css";
 import ProductDetails from "./ProductDetails";
 import Todo from "./Todo";
 import TodoList from "./TodoList";
-
 import Departments from "./Departments";
-
 import EmployeeForm from "./EmployeeForm";
+import EmployeeUpdate from "./EmployeeUpdate";
 
 const App = () => {
   const { isAuthenticated } = useContext(Context);
@@ -34,6 +33,7 @@ const App = () => {
           <Route path="/complecatedtodolist" element={<Todo />} />
           <Route path="/employeedataentry" element={<EmployeeForm />} />
           <Route path="/departments" element={<Departments />} />
+          <Route path="/employeeupdate" element={<EmployeeUpdate />} />
         </Routes>
         <ToastContainer position="top-right" />
       </Router>

@@ -8,7 +8,7 @@ const EmployeeForm = () => {
   const [departments, setDepartments] = useState(() => {
     return JSON.parse(localStorage.getItem("departments")) || [];
   });
-  //const [departments, setDepartments] = useState([]);
+
   const [employees, setEmployees] = useState(() => {
     return JSON.parse(localStorage.getItem("employees")) || [];
   });

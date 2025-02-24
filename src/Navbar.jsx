@@ -39,6 +39,11 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to={"/employeeupdate"}>
+                  Employee Update
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to={"/complecatedtodolist"}>
                   Complecated ToDo List
                 </Link>
