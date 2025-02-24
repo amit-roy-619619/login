@@ -9,8 +9,16 @@ export const Context = createContext();
 
 const AppWrapper = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [departmentsUpdate, setDepartmentsUpdate] = useState(false);
   return (
-    <Context.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <Context.Provider
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        departmentsUpdate,
+        setDepartmentsUpdate,
+      }}
+    >
       <App />
     </Context.Provider>
   );

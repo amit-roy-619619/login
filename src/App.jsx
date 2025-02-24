@@ -11,6 +11,9 @@ import "./App.css";
 import ProductDetails from "./ProductDetails";
 import Todo from "./Todo";
 import TodoList from "./TodoList";
+
+import Departments from "./Departments";
+
 import EmployeeForm from "./EmployeeForm";
 
 const App = () => {
@@ -30,6 +33,7 @@ const App = () => {
           <Route path="/simpletodolist" element={<TodoList />} />
           <Route path="/complecatedtodolist" element={<Todo />} />
           <Route path="/employeedataentry" element={<EmployeeForm />} />
+          <Route path="/departments" element={<Departments />} />
         </Routes>
         <ToastContainer position="top-right" />
       </Router>

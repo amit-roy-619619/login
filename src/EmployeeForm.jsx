@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { toast } from "react-toastify";
+import { Context } from "./main";
 
 const EmployeeForm = () => {
+  const { departmentsUpdate, setDepartmentsUpdate } = useContext(Context);
+  const [departments, setDepartments] = useState(() => {
+    return JSON.parse(localStorage.getItem("departments")) || [];
+  });
+  //const [departments, setDepartments] = useState([]);
   const [employees, setEmployees] = useState(() => {
     return JSON.parse(localStorage.getItem("employees")) || [];
   });
@@ -11,7 +17,7 @@ const EmployeeForm = () => {
     empName: "",
     dob: "",
     age: "",
-    department: "Sales",
+    department: departments[0].text,
     gender: "Male",
     role: "Admin",
     qualifications: [{ degree: "", year: "", grade: "" }],
@@ -20,7 +26,10 @@ const EmployeeForm = () => {
   useEffect(() => {
     localStorage.setItem("employees", JSON.stringify(employees));
   }, [employees]);
-
+  useEffect(() => {
+    setDepartments(JSON.parse(localStorage.getItem("departments"))) || [];
+  }, [departmentsUpdate]);
+  console.log(departments);
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const diff = new Date() - birthDate;
@@ -124,9 +133,13 @@ const EmployeeForm = () => {
             value={formData.department}
             onChange={handleChange}
           >
-            <option>Sales</option>
-            <option>Production</option>
-            <option>Marketing</option>
+            {departments.map((dep, i) => {
+              return (
+                <option key={i} value={dep.text}>
+                  {dep.text}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="mb-3">
