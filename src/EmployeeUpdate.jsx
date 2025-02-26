@@ -2,8 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "./main";
 import { toast } from "react-toastify";
 
+import DataTable from "react-data-table-component";
+
 const EmployeeUpdate = () => {
   const { departmentsUpdate, setDepartmentsUpdate } = useContext(Context);
+
+  // const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [employees, setEmployees] = useState(() => {
     return JSON.parse(localStorage.getItem("employees")) || [];
   });
@@ -12,7 +18,7 @@ const EmployeeUpdate = () => {
   });
   const [editOrNot, setEditOrNot] = useState(false);
   const [editingEmployeeIndex, setEditingEmployeeIndex] = useState(null);
-  //console.log(employees[editingEmployeeIndex].empId);
+
   const [editedFormData, setEditedFormData] = useState({});
 
   const calculateAge = (dob) => {
@@ -84,10 +90,23 @@ const EmployeeUpdate = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleQualificationDelete = (index) => {
+    const newObj = employees.find((item, i) => {
+      if (i == editingEmployeeIndex) return item;
+    });
+    const alteredQualificationArray = newObj.qualifications.filter((_, i) => {
+      return i !== index;
+    });
+
+    setEditedFormData({
+      ...editedFormData,
+      qualifications: [...alteredQualificationArray],
+    });
+  };
+
+  const handleUpdate = (e) => {
     e.preventDefault();
-    //setEmployees([...employees, editedFormData]);
-    //setEmployees(employees.splice(editingEmployeeIndex, 1, editedFormData));
+
     employees.map((emp, i) => {
       if (i === editingEmployeeIndex) {
         emp.empId = editedFormData.empId;
@@ -97,6 +116,7 @@ const EmployeeUpdate = () => {
         emp.department = editedFormData.department;
         emp.gender = editedFormData.gender;
         emp.qualifications = editedFormData.qualifications;
+        emp.role = editedFormData.role;
         setEmployees([...employees]);
       }
     });
@@ -112,6 +132,8 @@ const EmployeeUpdate = () => {
     });
     setEditingEmployeeIndex(null);
     toast.success("Employee Details Updated!");
+
+    window.location.reload(false);
   };
 
   const handleDeletePress = (index) => {
@@ -119,89 +141,199 @@ const EmployeeUpdate = () => {
     setEmployees(updatedEmployees);
   };
 
+  // --------------- Implementing React-data-Table -----------------
+
+  const customStyles = {
+    headCells: {
+      style: {
+        backgroundColor: "#4CAF50", // Green header background
+        color: "#fff", // White text
+        fontSize: "16px",
+        fontWeight: "bold",
+      },
+    },
+    rows: {
+      style: {
+        minHeight: "50px", // Increase row height
+        fontSize: "15px",
+      },
+    },
+    pagination: {
+      style: {
+        borderTop: "1px solid #ddd",
+        padding: "10px",
+      },
+    },
+    cells: {
+      style: {
+        borderBottom: "1px solid #eee", // Light border between rows
+      },
+    },
+  };
+
+  const columns = [
+    { name: "Emp ID", selector: (row) => row.empId, sortable: true },
+    { name: "Name", selector: (row) => row.empName, sortable: true },
+    { name: "DOB", selector: (row) => row.dob },
+    { name: "Age", selector: (row) => row.age, sortable: true },
+    {
+      name: "Qualifications",
+      cell: (row) =>
+        row.qualifications && Array.isArray(row.qualifications)
+          ? row.qualifications.map((q, i) => (
+              <div key={i}>
+                <strong>{q.degree}</strong> ({q.year}, {q.grade})
+              </div>
+            ))
+          : "No qualifications",
+    },
+    { name: "Department", selector: (row) => row.department },
+    { name: "Gender", selector: (row) => row.gender },
+    { name: "Role", selector: (row) => row.role },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <>
+          <button
+            onClick={() => handleEditPress(row.originalIndex)}
+            style={{ marginRight: "5px" }}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeletePress(row.originalIndex)}
+            style={{ color: "red" }}
+          >
+            Delete
+          </button>
+        </>
+      ),
+    },
+  ];
+
+  // Attaching the correct index to each employee before passing to DataTable
+  const dataWithIndex = employees.map((emp, index) => ({
+    ...emp,
+    originalIndex: index, // Store the correct array index
+  }));
+
+  const filteredEmployees = dataWithIndex.filter(
+    (emp) =>
+      emp.empName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      emp.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      emp.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (!editOrNot) {
     return (
-      <>
-        <div>
-          <div className="container mt-5">
-            <h2 className="text-center text-primary mb-4">Employee Details</h2>
-            <div className="row g-4">
-              {employees.map((emp, i) => {
-                return (
-                  <div className="col-md-4" key={i}>
-                    <div className="card shadow p-4">
-                      <div className="border-bottom py-2">
-                        <strong>ID:</strong> {emp.empId}
-                      </div>
-                      <div className="border-bottom py-2">
-                        <strong>Name:</strong> {emp.empName}
-                      </div>
-                      <div className="border-bottom py-2">
-                        <strong>DOB:</strong> {emp.dob}
-                      </div>
-                      <div className="border-bottom py-2">
-                        <strong>Age:</strong> {emp.age}
-                      </div>
-                      <div className="border-bottom py-2">
-                        <strong>Department:</strong> {emp.department}
-                      </div>
-                      <div className="border-bottom py-2">
-                        <strong>Gender:</strong> {emp.gender}
-                      </div>
-                      <div className="border-bottom py-2">
-                        <strong>Role:</strong> {emp.role}
-                      </div>
-                      <div className="mt-3">
-                        <h3 className="text-secondary">Qualifications</h3>
-                        <table className="table table-bordered">
-                          <thead className="table-light">
-                            <tr>
-                              <th>Degree</th>
-                              <th>Year</th>
-                              <th>Grade</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {emp.qualifications.map((quali, index) => {
-                              return (
-                                <tr key={index}>
-                                  <td>{quali.degree}</td>
-                                  <td>{quali.year}</td>
-                                  <td>{quali.grade}</td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                      <button
-                        onClick={() => {
-                          handleEditPress(i);
-                        }}
-                        className="btn btn-primary mb-2"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => {
-                          handleDeletePress(i);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-
-                    <div></div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </>
+      <div>
+        <h2>Employee List</h2>
+        <input
+          type="text"
+          placeholder="Search employees..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            marginBottom: "10px",
+            padding: "8px",
+            width: "250px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+          }}
+        />
+        <DataTable
+          title="Employee Records"
+          columns={columns}
+          data={filteredEmployees}
+          pagination
+          highlightOnHover
+          customStyles={customStyles}
+          striped
+          responsive
+        />
+      </div>
     );
+
+    // return (
+    //   <>
+    //     <div>
+    //       <div className="container mt-5">
+    //         <h2 className="text-center text-primary mb-4">Employee Details</h2>
+    //         <div className="row g-4">
+    //           {employees.map((emp, i) => {
+    //             return (
+    //               <div className="col-md-4" key={i}>
+    //                 <div className="card shadow p-4">
+    //                   <div className="border-bottom py-2">
+    //                     <strong>ID:</strong> {emp.empId}
+    //                   </div>
+    //                   <div className="border-bottom py-2">
+    //                     <strong>Name:</strong> {emp.empName}
+    //                   </div>
+    //                   <div className="border-bottom py-2">
+    //                     <strong>DOB:</strong> {emp.dob}
+    //                   </div>
+    //                   <div className="border-bottom py-2">
+    //                     <strong>Age:</strong> {emp.age}
+    //                   </div>
+    //                   <div className="border-bottom py-2">
+    //                     <strong>Department:</strong> {emp.department}
+    //                   </div>
+    //                   <div className="border-bottom py-2">
+    //                     <strong>Gender:</strong> {emp.gender}
+    //                   </div>
+    //                   <div className="border-bottom py-2">
+    //                     <strong>Role:</strong> {emp.role}
+    //                   </div>
+    //                   <div className="mt-3">
+    //                     <h3 className="text-secondary">Qualifications</h3>
+    //                     <table className="table table-bordered">
+    //                       <thead className="table-light">
+    //                         <tr>
+    //                           <th>Degree</th>
+    //                           <th>Year</th>
+    //                           <th>Grade</th>
+    //                         </tr>
+    //                       </thead>
+    //                       <tbody>
+    //                         {emp.qualifications.map((quali, index) => {
+    //                           return (
+    //                             <tr key={index}>
+    //                               <td>{quali.degree}</td>
+    //                               <td>{quali.year}</td>
+    //                               <td>{quali.grade}</td>
+    //                             </tr>
+    //                           );
+    //                         })}
+    //                       </tbody>
+    //                     </table>
+    //                   </div>
+    //                   <button
+    //                     onClick={() => {
+    //                       handleEditPress(i);
+    //                     }}
+    //                     className="btn btn-primary mb-2"
+    //                   >
+    //                     Edit
+    //                   </button>
+    //                   <button
+    //                     className="btn btn-danger"
+    //                     onClick={() => {
+    //                       handleDeletePress(i);
+    //                     }}
+    //                   >
+    //                     Delete
+    //                   </button>
+    //                 </div>
+    //                 <div></div>
+    //               </div>
+    //             );
+    //           })}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </>
+    // );
   } else {
     return (
       <div className="d-flex justify-content-center">
@@ -335,6 +467,15 @@ const EmployeeUpdate = () => {
                     handleQualificationChange(index, e);
                   }}
                 />
+                <button
+                  className="btn btn-danger"
+                  onClick={() => {
+                    handleQualificationDelete(index);
+                  }}
+                >
+                  {" "}
+                  Delete Qualification
+                </button>
               </div>
             ))}
             <button
@@ -349,7 +490,7 @@ const EmployeeUpdate = () => {
           <button
             type="submit"
             className="btn btn-primary"
-            onClick={handleSubmit}
+            onClick={handleUpdate}
           >
             Update
           </button>
