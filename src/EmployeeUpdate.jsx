@@ -90,7 +90,8 @@ const EmployeeUpdate = () => {
     });
   };
 
-  const handleQualificationDelete = (index) => {
+  const handleQualificationDelete = (index, e) => {
+    e.preventDefault();
     const newObj = employees.find((item, i) => {
       if (i == editingEmployeeIndex) return item;
     });
@@ -102,6 +103,7 @@ const EmployeeUpdate = () => {
       ...editedFormData,
       qualifications: [...alteredQualificationArray],
     });
+    setEditOrNot(true);
   };
 
   const handleUpdate = (e) => {
@@ -469,8 +471,8 @@ const EmployeeUpdate = () => {
                 />
                 <button
                   className="btn btn-danger"
-                  onClick={() => {
-                    handleQualificationDelete(index);
+                  onClick={(e) => {
+                    handleQualificationDelete(index, e);
                   }}
                 >
                   {" "}
